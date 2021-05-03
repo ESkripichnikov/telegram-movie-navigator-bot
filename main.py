@@ -1,9 +1,9 @@
-from config import bot_token, tmdb_token
-from get_movie_info import display_movie_info
 import logging
 from aiogram import Bot, Dispatcher, executor, types
 import keyboards as kb
 from callback_data import menu_cd
+from config import bot_token, tmdb_token
+from get_movie_info import display_movie_info
 
 
 # Configure logging
@@ -54,7 +54,7 @@ async def movie_query(message: types.Message):
     try:
         markup = kb.movie_keyboard(source='1', movie_name=movie_name)
         await message.answer("Выберете интересующий вас фильм", reply_markup=markup)
-    except:
+    except Exception:
         await message.answer("Проверьте название введённого фильма")
 
 
@@ -62,7 +62,7 @@ async def start_menu(call: types.CallbackQuery, **kwargs):
     try:
         markup = kb.start_keyboard()
         await call.message.edit_reply_markup(markup)
-    except:
+    except Exception:
         await call.answer("Что-то пошло не так, попробуйте позже")
 
 
@@ -71,19 +71,19 @@ async def list_top(call: types.CallbackQuery, source, start, **kwargs):
         try:
             markup = kb.trending_keyboard(start)
             await call.message.edit_reply_markup(markup)
-        except:
+        except Exception:
             await call.answer("Что-то пошло не так, попробуйте позже")
     elif source == '3':
         try:
             markup = kb.top_rated_keyboard(start)
             await call.message.edit_reply_markup(markup)
-        except:
+        except Exception:
             await call.answer("Что-то пошло не так, попробуйте позже")
     elif source == '4':
         try:
             markup = kb.upcoming_keyboard(start)
             await call.message.edit_reply_markup(markup)
-        except:
+        except Exception:
             await call.answer("Что-то пошло не так, попробуйте позже")
 
 
@@ -92,7 +92,7 @@ async def list_genres(call: types.CallbackQuery, source, start, **kwargs):
         markup = kb.genre_keyboard(source, start)
         await call.message.edit_text("Выберете интересующий вас жанр")
         await call.message.edit_reply_markup(markup)
-    except:
+    except Exception:
         await call.answer("Что-то пошло не так, попробуйте позже")
 
 
@@ -101,7 +101,7 @@ async def list_possible_movies(call: types.CallbackQuery, source, **kwargs):
         markup = kb.movie_keyboard(source=source, **kwargs)
         await call.message.edit_text("Выберете интересующий вас фильм")
         await call.message.edit_reply_markup(markup)
-    except:
+    except Exception:
         await call.answer("Что-то пошло не так, попробуйте позже")
 
 
@@ -111,7 +111,7 @@ async def movie_info(call: types.CallbackQuery, movie_id, **kwargs):
         markup = kb.movie_links_keyboard(movie_id, **kwargs)
         await call.message.edit_text(movie_info, parse_mode='Markdown')
         await call.message.edit_reply_markup(markup)
-    except:
+    except Exception:
         await call.answer("Что-то пошло не так, попробуйте позже")
 
 

@@ -1,6 +1,6 @@
+import requests
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from callback_data import make_callback_data
-import requests
 from config import tmdb_token
 from get_movie_info import get_possible_movies, get_trending, get_trending_genre,\
     get_top_rated, get_top_rated_genre, get_upcoming, get_upcoming_genre, get_movie, trailer
@@ -103,7 +103,6 @@ def genre_keyboard(source, start):
     Generate the keyboard with different genres
     """
     current_level = 2
-
     keyboard = InlineKeyboardMarkup(row_width=1)
     r = requests.get(f'https://api.themoviedb.org/3/genre/movie/list?api_key={tmdb_token}&language=ru-RU')
     all_genres = r.json()["genres"]
@@ -129,7 +128,6 @@ def movie_keyboard(source, **kwargs):
     Generate the keyboard with all possible movies, that could be implied
     """
     current_level = 3
-
     if source == '1':
         results = get_possible_movies(kwargs.get("movie_name"), tmdb_token)
     elif source == '2':
@@ -156,7 +154,7 @@ def movie_keyboard(source, **kwargs):
         keyboard.add(btn)
 
     if kwargs.get("movie_name") != '0':
-        # there should be no "back" button
+        # in this case should be no "back" button
         return keyboard
 
     if kwargs.get("genre_id") == '0':
@@ -180,7 +178,7 @@ def movie_keyboard(source, **kwargs):
 
 def movie_links_keyboard(movie_id, **kwargs):
     """
-    Generate the keyboard with links to the movie on tmdb and imdb
+    Generate the keyboard with links to the movie on tmdb, imdb and its trailer
     """
     current_level = 4
     keyboard = InlineKeyboardMarkup(row_width=2)
