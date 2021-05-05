@@ -61,6 +61,7 @@ async def movie_query(message: types.Message):
 async def start_menu(call: types.CallbackQuery, **kwargs):
     try:
         markup = kb.start_keyboard()
+        await call.message.edit_text("Выберете подходящий вариант")
         await call.message.edit_reply_markup(markup)
     except Exception:
         await call.answer("Что-то пошло не так, попробуйте позже")
@@ -70,18 +71,21 @@ async def list_top(call: types.CallbackQuery, source, start, **kwargs):
     if source == '2':
         try:
             markup = kb.trending_keyboard(start)
+            await call.message.edit_text("Выберете интересующий вас фильм")
             await call.message.edit_reply_markup(markup)
         except Exception:
             await call.answer("Что-то пошло не так, попробуйте позже")
     elif source == '3':
         try:
             markup = kb.top_rated_keyboard(start)
+            await call.message.edit_text("Выберете интересующий вас фильм")
             await call.message.edit_reply_markup(markup)
         except Exception:
             await call.answer("Что-то пошло не так, попробуйте позже")
     elif source == '4':
         try:
             markup = kb.upcoming_keyboard(start)
+            await call.message.edit_text("Выберете интересующий вас фильм")
             await call.message.edit_reply_markup(markup)
         except Exception:
             await call.answer("Что-то пошло не так, попробуйте позже")
