@@ -24,7 +24,7 @@ def start_keyboard():
     btn_top_rated_genre = InlineKeyboardButton(text="Самые рейтинговые фильмы по жанрам",
                                                callback_data=make_callback_data(level=current_level + 2,
                                                                                 source='3', start='1'))
-    btn_upcoming = InlineKeyboardButton(text="Премьеры1",
+    btn_upcoming = InlineKeyboardButton(text="Премьеры",
                                         callback_data=make_callback_data(level=current_level + 3,
                                                                          source='4', start='1'))
     btn_upcoming_genre = InlineKeyboardButton(text="Премьеры по жанрам",
