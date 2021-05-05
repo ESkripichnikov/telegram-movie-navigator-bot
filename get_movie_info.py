@@ -180,7 +180,6 @@ def get_top_rated(tmdb_token):
     for movie in data["results"]:
         if len(results) < 10:
             results[movie["id"]] = movie["title"]
-            break
     return results
 
 
