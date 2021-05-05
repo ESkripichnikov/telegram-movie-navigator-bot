@@ -16,12 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-#      - name: Configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: us-east-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
@@ -38,25 +38,25 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-#
-#      - name: Deploy to aws
-#        uses: silinternational/ecs-deploy@master
-#        with:
-#          aws_access_key_cmd: '--aws-access-key'
-#          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws_secret_key_cmd: '--aws-secret-key'
-#          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          cluster_cmd: '--cluster'
-#          cluster: 'humankind-dev-cluster'
-#          image_cmd: '--image'
-#          image: ${{ steps.build-image.outputs.image }}
-#          region_cmd: '--region'
-#          region: 'us-east-1'
-#          service_name_cmd: '--service-name'
-#          service_name: 'humankind-backend-dev'
-#          timeout_cmd: '--timeout'
-#          timeout: '600'
-#          max_cmd: '--max'
-#          max: '200'
-#          min_cmd: '--min'
-#          min: '0'
+
+      - name: Deploy to aws
+        uses: silinternational/ecs-deploy@master
+        with:
+          aws_access_key_cmd: '--aws-access-key'
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key_cmd: '--aws-secret-key'
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          cluster_cmd: '--cluster'
+          cluster: 'telegrambot'
+          image_cmd: '--image'
+          image: ${{ steps.build-image.outputs.image }}
+          region_cmd: '--region'
+          region: 'us-east-1'
+          service_name_cmd: '--service-name'
+          service_name: 'movie_navigator_bot'
+          timeout_cmd: '--timeout'
+          timeout: '600'
+          max_cmd: '--max'
+          max: '200'
+          min_cmd: '--min'
+          min: '0'
