@@ -47,15 +47,15 @@ jobs:
           aws_secret_key_cmd: '--aws-secret-key'
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           cluster_cmd: '--cluster'
-          cluster: 'telegrambot'
+          cluster: 'movie-navifator-cluster-prod'
           image_cmd: '--image'
           image: ${{ steps.build-image.outputs.image }}
           region_cmd: '--region'
           region: 'us-east-1'
           service_name_cmd: '--service-name'
-          service_name: 'movie_navigator_bot'
+          service_name: 'movie-navigator-service-prod'
           timeout_cmd: '--timeout'
-          timeout: '600'
+          timeout: '200'
           max_cmd: '--max'
           max: '200'
           min_cmd: '--min'
