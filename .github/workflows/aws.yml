@@ -55,7 +55,7 @@ jobs:
           service_name_cmd: '--service-name'
           service_name: 'movie-navigator-service-prod'
           timeout_cmd: '--timeout'
-          timeout: '200'
+          timeout: '400'
           max_cmd: '--max'
           max: '200'
           min_cmd: '--min'
