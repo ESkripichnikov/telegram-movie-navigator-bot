@@ -5,12 +5,6 @@ on:
     tags-ignore:
       - '**'
       
-steps:
-  - name: Hello world action
-    with: # Set the secret as an input
-      super_secret: ${{ secrets.SuperSecret }}
-    env: # Or as an environment variable
-      super_secret: ${{ secrets.SuperSecret }}
 
 name: Deploy to Amazon ECS Dev
 
