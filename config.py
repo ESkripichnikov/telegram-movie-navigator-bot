@@ -1,2 +1,4 @@
-bot_token = secrets.TELEGRAM_TOKEN
-tmdb_token = secrets.TMDB_TOKEN
+import os
+
+bot_token = os.getenv("TELEGRAM_TOKEN")
+tmdb_token = os.getenv("TMDB_TOKEN")
