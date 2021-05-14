@@ -17,10 +17,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         
-      - name: Get Tokens
+      - shell: bash
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
+        run: |
+          example-command "$TELEGRAM_TOKEN"
+          example-command "$TMDB_TOKEN"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
