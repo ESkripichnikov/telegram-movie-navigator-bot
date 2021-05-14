@@ -1,2 +1,2 @@
-bot_token = '1740820211:AAEG-ZBsB7ZRCUXBTEROmG1R6z6MIGq8Z3k'
-tmdb_token = 'fd34d0feb15a274be22eef150b2009c7'
+bot_token = secrets.TELEGRAM_TOKEN
+tmdb_token = secrets.TMDB_TOKEN
