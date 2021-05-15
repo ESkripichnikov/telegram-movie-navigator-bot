@@ -2,3 +2,6 @@ version: '3.9'
 services:
   telegram_bot:
     build: .
+    environment:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
