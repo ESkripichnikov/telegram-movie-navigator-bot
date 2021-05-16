@@ -31,8 +31,6 @@ jobs:
           ECR_REPOSITORY: telegram_bot
           IMAGE_TAG: ${{ github.sha }}
           DOCKER_PASS: ${{ secrets.docker_pass }}
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
