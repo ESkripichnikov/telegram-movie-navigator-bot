@@ -2,8 +2,8 @@ import requests
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from callback_data import make_callback_data
 from config import tmdb_token
-from get_movie_info import get_possible_movies, get_popular, get_movies_genre,\
-    get_top_rated, get_upcoming, get_imdb_id, get_trailer
+from get_movie_info import get_possible_movies, get_movies_section, \
+    get_movies_genre, get_imdb_id, get_trailer
 
 
 def start_keyboard():
@@ -132,17 +132,17 @@ def movie_keyboard(source, **kwargs):
         results = get_possible_movies(kwargs.get("movie_name"), tmdb_token)
     elif source == '2':
         if kwargs.get("genre_id") == '0':
-            results = get_popular(tmdb_token)
+            results = get_movies_section('popular', tmdb_token)
         else:
             results = get_movies_genre(kwargs.get("genre_id"), 'popular', tmdb_token)
     elif source == '3':
         if kwargs.get("genre_id") == '0':
-            results = get_top_rated(tmdb_token)
+            results = get_movies_section('top_rated', tmdb_token)
         else:
             results = get_movies_genre(kwargs.get("genre_id"), 'top_rated', tmdb_token)
     else:
         if kwargs.get("genre_id") == '0':
-            results = get_upcoming(tmdb_token)
+            results = get_movies_section('upcoming', tmdb_token)
         else:
             results = get_movies_genre(kwargs.get("genre_id"), 'upcoming', tmdb_token)
 

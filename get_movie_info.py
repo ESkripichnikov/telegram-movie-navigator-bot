@@ -154,43 +154,11 @@ def get_trailer(movie_id, tmdb_token):
     return None
 
 
-def get_popular(tmdb_token):
+def get_movies_section(section, tmdb_token):
     """
-    Returns the list of popular movies
+    Returns the list of movies depending on section
     """
-    r = requests.get(f'https://api.themoviedb.org/3/movie/popular/?api_key={tmdb_token}&language=ru-RU')
-    data = r.json()
-    if not data["results"]:
-        raise Exception
-    results = {}
-    for movie in data["results"]:
-        if len(results) < 10:
-            results[movie["id"]] = movie["title"]
-    return results
-
-
-def get_top_rated(tmdb_token):
-    """
-    Returns the list of top rated movies
-    """
-    r = requests.get(f'https://api.themoviedb.org/3/movie/top_rated?api_key={tmdb_token}&language=ru-RU')
-    data = r.json()
-    if not data["results"]:
-        raise Exception
-    results = {}
-    for movie in data["results"]:
-        if len(results) < 10:
-            results[movie["id"]] = movie["title"]
-    return results
-
-
-def get_upcoming(tmdb_token):
-    """
-    Returns the list of upcoming movies
-    """
-    r = requests.get(
-        f'https://api.themoviedb.org/3/movie/upcoming?api_key={tmdb_token}&language=ru-RU&page=1&region=RU'
-    )
+    r = requests.get(f'https://api.themoviedb.org/3/movie/{section}/?api_key={tmdb_token}&language=ru-RU')
     data = r.json()
     if not data["results"]:
         raise Exception
@@ -202,6 +170,9 @@ def get_upcoming(tmdb_token):
 
 
 def get_movies_genre(genre_id, section, tmdb_token):
+    """
+    Returns the list of movies by genre depending on section (popular, top_rated or upcoming)
+    """
     results = {}
     for page in pages(section, tmdb_token):
         if not page and not results:
