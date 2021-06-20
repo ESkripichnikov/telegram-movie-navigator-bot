@@ -1,23 +1,11 @@
 from aiogram import types, Dispatcher
 import keyboards
+from constants import help_text
 
 
 async def send_help(message: types.Message):
     # the main info about the bot (what it can do) with all commands, their descriptions and starting menu
-    await message.answer("КиноНавигатор\n\n"
-                         "Я могу быстро найти много полезной информации о любом фильме, "
-                         "а также помочь с поиском самых популярных фильмов любого жанра.\n\n"
-                         "Для того, чтобы начать, просто отправь мне название интересующего тебя фильма "
-                         "(я понимаю не только русский, но и английский язык) или воспользуйся кнопками ниже.\n\n"
-                         "Также ты можешь пользоваться следующими командами для поиска различных фильмов:\n"
-                         "• Отправь команду /popular для поиска популярных фильмов, в том числе "
-                         "среди различных жанров\n"
-                         "• Отправь команду /top_rated для поиска самых рейтинговых фильмов, в том числе "
-                         "среди различных жанров\n"
-                         "• Отправь команду /upcoming для поиска фильмов, которые скоро выйдут в кино, в том числе "
-                         "среди различных жанров\n"
-                         "• Отправь команду /help, чтобы в любой момент прочитать эту инструкцию ещё раз",
-                         reply_markup=keyboards.start_keyboard())
+    await message.answer(help_text, reply_markup=keyboards.start_keyboard())
 
 
 async def send_top(message: types.Message):

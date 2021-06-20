@@ -1,14 +1,11 @@
 import requests
-
-actors_number = 5  # how many actors to display
-directors_number = 2  # how many directors to display
-months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
-          "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"]
-movies_to_display = 10  # how many movies to display
-links = {
-    "Youtube": 'https://www.youtube.com/watch?v={}',
-    "Vimeo": 'https://vimeo.com/{}'
-}
+from constants import (
+    actors_number,
+    directors_number,
+    links,
+    months,
+    movies_to_display,
+)
 
 
 def get_genres(data):
@@ -117,23 +114,8 @@ def get_movie(movie_id, tmdb_token):
            f"{overview}"
 
 
-def get_backdrop_path(movie_id, tmdb_token):
-    """
-    Returns the backdrop path
-    """
-    r = requests.get(
-        f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={tmdb_token}'
-    )
-    data = r.json()
-    if data["backdrop_path"]:
-        return f'https://image.tmdb.org/t/p/original/{data["backdrop_path"]}'
-    return None
-
-
 def get_imdb_id(movie_id, tmdb_token):
-    r = requests.get(
-        f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={tmdb_token}&language=ru-RU&append_to_response=credits'
-    )
+    r = requests.get(f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={tmdb_token}')
     data = r.json()
     return data["imdb_id"]
 
@@ -142,9 +124,7 @@ def get_trailer(movie_id, tmdb_token):
     """
     Returns the trailer link
     """
-    r = requests.get(
-        f'https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={tmdb_token}&language=ru-RU'
-    )
+    r = requests.get(f'https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={tmdb_token}&language=ru-RU')
     data = r.json()
     if data["results"]:
         if data["results"][0]["site"] == "YouTube":
@@ -156,7 +136,7 @@ def get_trailer(movie_id, tmdb_token):
 
 def get_movies_section(section, tmdb_token):
     """
-    Returns the list of movies depending on section
+    Returns the list of movies depending on section (popular, top_rated or upcoming)
     """
     r = requests.get(f'https://api.themoviedb.org/3/movie/{section}/?api_key={tmdb_token}&language=ru-RU')
     data = r.json()
