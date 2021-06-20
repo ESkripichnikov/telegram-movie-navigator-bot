@@ -1,5 +1,6 @@
 from aiogram import types, Dispatcher
 import keyboards
+from callback_data import Source, Start
 from constants import help_text
 
 
@@ -12,11 +13,11 @@ async def send_top(message: types.Message):
     command = message.get_command()
 
     if command == "/popular":
-        reply_markup = keyboards.trending_keyboard(start='0')
+        reply_markup = keyboards.trending_keyboard(start=Start.other.value)
     elif command == "/top_rated":
-        reply_markup = keyboards.top_rated_keyboard(start='0')
+        reply_markup = keyboards.top_rated_keyboard(start=Start.other.value)
     else:
-        reply_markup = keyboards.upcoming_keyboard(start='0')
+        reply_markup = keyboards.upcoming_keyboard(start=Start.other.value)
 
     await message.answer("Выбери подходящий вариант", reply_markup=reply_markup)
 
@@ -24,7 +25,7 @@ async def send_top(message: types.Message):
 async def movie_query(message: types.Message):
     movie_name = message.text
     try:
-        markup = keyboards.movie_keyboard(source='1', movie_name=movie_name)
+        markup = keyboards.movie_keyboard(source=Source.movie_request.value, movie_name=movie_name)
         await message.answer("Выберете интересующий вас фильм", reply_markup=markup)
     except Exception:
         await message.answer("Проверьте название введённого фильма")

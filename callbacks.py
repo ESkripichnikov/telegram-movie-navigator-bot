@@ -1,6 +1,6 @@
 from aiogram import types, Dispatcher
 import keyboards
-from callback_data import menu_cd
+from callback_data import menu_cd, Source
 from config import tmdb_token
 from get_movie_info import get_movie
 
@@ -15,21 +15,21 @@ async def display_start_menu(call: types.CallbackQuery, **kwargs):
 
 
 async def list_top(call: types.CallbackQuery, source, start, **kwargs):
-    if source == '2':
+    if source == Source.trending.value:
         try:
             markup = keyboards.trending_keyboard(start)
             await call.message.edit_text("Выберете интересующий вас фильм")
             await call.message.edit_reply_markup(markup)
         except Exception:
             await call.answer("Что-то пошло не так, попробуйте позже")
-    elif source == '3':
+    elif source == Source.top_rated.value:
         try:
             markup = keyboards.top_rated_keyboard(start)
             await call.message.edit_text("Выберете интересующий вас фильм")
             await call.message.edit_reply_markup(markup)
         except Exception:
             await call.answer("Что-то пошло не так, попробуйте позже")
-    elif source == '4':
+    elif source == Source.upcoming.value:
         try:
             markup = keyboards.upcoming_keyboard(start)
             await call.message.edit_text("Выберете интересующий вас фильм")
@@ -66,13 +66,13 @@ async def display_movie_info(call: types.CallbackQuery, movie_id, **kwargs):
         await call.answer("Что-то пошло не так, попробуйте позже")
 
 
-async def navigate(call: types.CallbackQuery, callback_data: dict):
-    current_level = callback_data["level"]
-    source = callback_data["source"]
-    movie_name = callback_data["movie_name"]
-    genre_id = callback_data["genre_id"]
-    movie_id = callback_data["movie_id"]
-    start = callback_data["start"]
+async def navigate(call: types.CallbackQuery, callback: dict):
+    current_level = callback["level"]
+    source = callback["source"]
+    movie_name = callback["movie_name"]
+    genre_id = callback["genre_id"]
+    movie_id = callback["movie_id"]
+    start = callback["start"]
 
     levels = {
         "0": display_start_menu,
