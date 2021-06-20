@@ -2,8 +2,8 @@ import requests
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from callback_data import make_callback_data
 from config import tmdb_token
-from get_movie_info import get_possible_movies, get_trending, get_trending_genre,\
-    get_top_rated, get_top_rated_genre, get_upcoming, get_upcoming_genre, get_movie, trailer
+from get_movie_info import get_possible_movies, get_popular, get_movies_genre,\
+    get_top_rated, get_upcoming, get_imdb_id, get_trailer
 
 
 def start_keyboard():
@@ -132,19 +132,19 @@ def movie_keyboard(source, **kwargs):
         results = get_possible_movies(kwargs.get("movie_name"), tmdb_token)
     elif source == '2':
         if kwargs.get("genre_id") == '0':
-            results = get_trending(tmdb_token)
+            results = get_popular(tmdb_token)
         else:
-            results = get_trending_genre(kwargs.get("genre_id"), tmdb_token)
+            results = get_movies_genre(kwargs.get("genre_id"), 'popular', tmdb_token)
     elif source == '3':
         if kwargs.get("genre_id") == '0':
             results = get_top_rated(tmdb_token)
         else:
-            results = get_top_rated_genre(kwargs.get("genre_id"), tmdb_token)
+            results = get_movies_genre(kwargs.get("genre_id"), 'top_rated', tmdb_token)
     else:
         if kwargs.get("genre_id") == '0':
             results = get_upcoming(tmdb_token)
         else:
-            results = get_upcoming_genre(kwargs.get("genre_id"), tmdb_token)
+            results = get_movies_genre(kwargs.get("genre_id"), 'upcoming', tmdb_token)
 
     keyboard = InlineKeyboardMarkup(row_width=1)
     for movie_id, movie in results.items():
@@ -182,14 +182,14 @@ def movie_links_keyboard(movie_id, **kwargs):
     """
     current_level = 4
     keyboard = InlineKeyboardMarkup(row_width=2)
-    imdb_id = get_movie(movie_id, tmdb_token)["imdb_id"]
+    imdb_id = get_imdb_id(movie_id, tmdb_token)
     url_imdb = f'https://www.imdb.com/title/{imdb_id}'
     url_tmdb = f'https://www.themoviedb.org/movie/{movie_id}'
     btn_IMDb = InlineKeyboardButton(text="IMDb", url=url_imdb)
     btn_TMDb = InlineKeyboardButton(text="TMDb", url=url_tmdb)
     keyboard.add(btn_IMDb, btn_TMDb)
 
-    trailer_link = trailer(movie_id, tmdb_token)
+    trailer_link = get_trailer(movie_id, tmdb_token)
     if trailer_link:
         btn_trailer = InlineKeyboardButton(text="Смотреть трейлер", url=trailer_link)
         keyboard.row(btn_trailer)

@@ -2,7 +2,7 @@ from aiogram import types, Dispatcher
 import keyboards
 from callback_data import menu_cd
 from config import tmdb_token
-from get_movie_info import convert_movie_info
+from get_movie_info import get_movie
 
 
 async def display_start_menu(call: types.CallbackQuery, **kwargs):
@@ -58,7 +58,7 @@ async def list_possible_movies(call: types.CallbackQuery, source, **kwargs):
 
 async def display_movie_info(call: types.CallbackQuery, movie_id, **kwargs):
     try:
-        movie_info = convert_movie_info(movie_id, tmdb_token)
+        movie_info = get_movie(movie_id, tmdb_token)
         markup = keyboards.movie_links_keyboard(movie_id, **kwargs)
         await call.message.edit_text(movie_info, parse_mode='Markdown')
         await call.message.edit_reply_markup(markup)
@@ -67,12 +67,12 @@ async def display_movie_info(call: types.CallbackQuery, movie_id, **kwargs):
 
 
 async def navigate(call: types.CallbackQuery, callback_data: dict):
-    current_level = callback_data.get("level")
-    source = callback_data.get("source")
-    movie_name = callback_data.get("movie_name")
-    genre_id = callback_data.get("genre_id")
-    movie_id = callback_data.get("movie_id")
-    start = callback_data.get("start")
+    current_level = callback_data["level"]
+    source = callback_data["source"]
+    movie_name = callback_data["movie_name"]
+    genre_id = callback_data["genre_id"]
+    movie_id = callback_data["movie_id"]
+    start = callback_data["start"]
 
     levels = {
         "0": display_start_menu,

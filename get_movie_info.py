@@ -1,5 +1,74 @@
 import requests
 
+actors_number = 5  # how many actors to display
+directors_number = 2  # how many directors to display
+months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
+          "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"]
+movies_to_display = 10  # how many movies to display
+links = {
+    "Youtube": 'https://www.youtube.com/watch?v={}',
+    "Vimeo": 'https://vimeo.com/{}'
+}
+
+
+def get_genres(data):
+    genres = list()
+    for genre in data["genres"]:
+        genres.append(genre['name'])
+    return ', '.join(genres).title()
+
+
+def get_countries(data):
+    countries = list()
+    for country in data["production_countries"]:
+        countries.append(country['name'])
+    return ', '.join(countries)
+
+
+def get_actors(data):
+    actors = list()
+    for man in data["credits"]["cast"]:
+        if len(actors) < actors_number and man["known_for_department"] == "Acting":
+            actors.append(man["name"])
+    return ', '.join(actors)
+
+
+def get_directors(data):
+    directors = list()
+    for man in data["credits"]["crew"]:
+        if len(directors) < directors_number and man["job"] == "Director":
+            directors.append(man["name"])
+    return ', '.join(directors)
+
+
+def get_release_date(data):
+    tmp = data['release_date'].split('-')
+    release_date = str(int(tmp[2])) + ' ' + months[int(tmp[1]) - 1] + ' ' + tmp[0]
+    return release_date
+
+
+def get_runtime(data):
+    tmp = data['runtime']
+    if tmp // 60 < 10:
+        hours = "0" + str(tmp // 60)
+    else:
+        hours = str(tmp // 60)
+    if tmp % 60 < 10:
+        minutes = "0" + str(tmp % 60)
+    else:
+        minutes = str(tmp % 60)
+    runtime = str(tmp) + " мин. / " + hours + ':' + minutes
+    return runtime
+
+
+def pages(section, tmdb_token):
+    """
+    Generator of pages with movies
+    """
+    link = f'https://api.themoviedb.org/3/movie/{section}?api_key={tmdb_token}&language=ru-RU' + '&page={page}'
+    for i in range(1, 101):
+        yield requests.get(link.format(page=str(i))).json()["results"]
+
 
 def get_possible_movies(movie_name, tmdb_token):
     """
@@ -14,7 +83,7 @@ def get_possible_movies(movie_name, tmdb_token):
         raise Exception
     results = {}
     for movie in data["results"]:
-        if len(results) < 10:
+        if len(results) < movies_to_display:
             results[movie["id"]] = movie["title"]
     return results
 
@@ -28,80 +97,27 @@ def get_movie(movie_id, tmdb_token):
     )
     data = r.json()
 
-    movie_info = dict()
-    movie_info["title"] = data["title"]
-    movie_info["original_title"] = data["original_title"]
-    movie_info["release_date"] = data["release_date"]
-    movie_info["runtime"] = data["runtime"]
-    movie_info["vote_average"] = data["vote_average"]
-    movie_info["overview"] = data["overview"]
-    movie_info["imdb_id"] = data["imdb_id"]
-
-    movie_info["genres"] = []
-    for genre in data["genres"]:
-        movie_info["genres"].append(genre['name'])
-
-    movie_info["production_countries"] = []
-    for country in data["production_countries"]:
-        movie_info["production_countries"].append(country['name'])
-
-    movie_info["cast"] = []
-    for man in data["credits"]["cast"]:
-        if len(movie_info["cast"]) < 5 and man["known_for_department"] == "Acting":
-            movie_info["cast"].append(man["name"])
-
-    movie_info["director"] = []
-    for man in data["credits"]["crew"]:
-        if len(movie_info["director"]) < 2 and man["job"] == "Director":
-            movie_info["director"].append(man["name"])
-    return movie_info
-
-
-def display_movie_info(movie_id, tmdb_token):
-    """
-    Converts movie information to readable form
-    """
-    movie_info = get_movie(movie_id, tmdb_token)
-    title = movie_info['title']
-    original_title = movie_info['original_title']
-    vote_average = movie_info['vote_average']
-
-    tmp = movie_info['release_date'].split('-')
-    months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября",
-              "Октября", "Ноября", "Декабря"]
-    release_date = str(int(tmp[2])) + ' ' + months[int(tmp[1]) - 1] + ' ' + tmp[0]
-
-    tmp = movie_info['runtime']
-    if tmp // 60 < 10:
-        hours = "0" + str(tmp // 60)
-    else:
-        hours = str(tmp // 60)
-    if tmp % 60 < 10:
-        minutes = "0" + str(tmp % 60)
-    else:
-        minutes = str(tmp % 60)
-    runtime = str(tmp) + " мин. / " + hours + ':' + minutes
-
-    genres = ', '.join(movie_info['genres']).title()
-
-    production_countries = ', '.join(movie_info['production_countries'])
-
-    director = ', '.join(movie_info['director'])
-
-    cast = ', '.join(movie_info['cast'])
-
-    overview = movie_info['overview']
+    title = data["title"]
+    original_title = data["original_title"]
+    release_date = get_release_date(data)
+    runtime = get_runtime(data)
+    vote_average = data["vote_average"]
+    overview = data["overview"]
+    genres = get_genres(data)
+    production_countries = get_countries(data)
+    actors = get_actors(data)
+    directors = get_directors(data)
 
     return f"*{title}*\n{original_title}\n\n" \
            f"⭐ {vote_average} 📅 {release_date} 🕑 {runtime}\n" \
            f"🎞️ {genres}\n" \
            f"🌍 {production_countries}\n\n" \
-           f"🎥 Режиссер: {director}\n" \
-           f"🎭 В главных ролях: {cast}\n\n" \
+           f"🎥 Режиссер: {directors}\n" \
+           f"🎭 В главных ролях: {actors}\n\n" \
            f"{overview}"
 
 
-def backdrop_path(movie_id, tmdb_token):
+def get_backdrop_path(movie_id, tmdb_token):
     """
     Returns the backdrop path
     """
@@ -114,7 +130,15 @@ def backdrop_path(movie_id, tmdb_token):
     return None
 
 
-def trailer(movie_id, tmdb_token):
+def get_imdb_id(movie_id, tmdb_token):
+    r = requests.get(
+        f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={tmdb_token}&language=ru-RU&append_to_response=credits'
+    )
+    data = r.json()
+    return data["imdb_id"]
+
+
+def get_trailer(movie_id, tmdb_token):
     """
     Returns the trailer link
     """
@@ -124,17 +148,17 @@ def trailer(movie_id, tmdb_token):
     data = r.json()
     if data["results"]:
         if data["results"][0]["site"] == "YouTube":
-            return f'https://www.youtube.com/watch?v={data["results"][0]["key"]}'
+            return links["Youtube"].format(data["results"][0]["key"])
         elif data["results"][0]["site"] == "Vimeo":
-            return f'https://vimeo.com/{data["results"][0]["key"]}'
+            return links["Vimeo"].format(data["results"][0]["key"])
     return None
 
 
-def get_trending(tmdb_token):
+def get_popular(tmdb_token):
     """
-    Returns the list of trending movies
+    Returns the list of popular movies
     """
-    r = requests.get(f'https://api.themoviedb.org/3/trending/movie/week?api_key={tmdb_token}&language=ru-RU')
+    r = requests.get(f'https://api.themoviedb.org/3/movie/popular/?api_key={tmdb_token}&language=ru-RU')
     data = r.json()
     if not data["results"]:
         raise Exception
@@ -142,29 +166,6 @@ def get_trending(tmdb_token):
     for movie in data["results"]:
         if len(results) < 10:
             results[movie["id"]] = movie["title"]
-    return results
-
-
-def get_trending_genre(genre_id, tmdb_token):
-    """
-    Returns the list of trending movies by genre
-    """
-    results = {}
-    page = 1
-    while len(results) < 10 and page < 100:
-        r = requests.get(
-            f'https://api.themoviedb.org/3/trending/movie/week?api_key={tmdb_token}&language=ru-RU&page={page}'
-        )
-        data = r.json()
-        if not data["results"] and not results:
-            raise Exception
-        elif not data["results"] and results:
-            return results
-        for movie in data["results"]:
-            for genre in movie["genre_ids"]:
-                if genre == int(genre_id):
-                    results[movie["id"]] = movie["title"]
-        page += 1
     return results
 
 
@@ -180,30 +181,6 @@ def get_top_rated(tmdb_token):
     for movie in data["results"]:
         if len(results) < 10:
             results[movie["id"]] = movie["title"]
-    return results
-
-
-def get_top_rated_genre(genre_id, tmdb_token):
-    """
-    Returns the list of top rated movies by genre
-    """
-    results = {}
-    page = 1
-    while len(results) < 10 and page < 100:
-        r = requests.get(
-            f'https://api.themoviedb.org/3/movie/top_rated?api_key={tmdb_token}&language=ru-RU&page={page}'
-        )
-        data = r.json()
-        if not data["results"] and not results:
-            raise Exception
-        elif not data["results"] and results:
-            return results
-        for movie in data["results"]:
-            for genre in movie["genre_ids"]:
-                if genre == int(genre_id):
-                    results[movie["id"]] = movie["title"]
-                    break
-        page += 1
     return results
 
 
@@ -224,25 +201,15 @@ def get_upcoming(tmdb_token):
     return results
 
 
-def get_upcoming_genre(genre_id, tmdb_token):
-    """
-    Returns the list of upcoming movies by genre
-    """
+def get_movies_genre(genre_id, section, tmdb_token):
     results = {}
-    page = 1
-    while len(results) < 10 and page < 100:
-        r = requests.get(
-            f'https://api.themoviedb.org/3/movie/upcoming?api_key={tmdb_token}&language=ru-RU&page={page}&region=RU'
-        )
-        data = r.json()
-        if not data["results"] and not results:
-            raise Exception
-        elif not data["results"] and results:
+    for page in pages(section, tmdb_token):
+        if not page and not results:
+            raise Exception  # расписать exception
+        elif len(results) >= movies_to_display or (not page and results):
             return results
-        for movie in data["results"]:
-            for genre in movie["genre_ids"]:
-                if genre == int(genre_id):
-                    results[movie["id"]] = movie["title"]
-                    break
-        page += 1
+
+        for movie in page:
+            if int(genre_id) in movie["genre_ids"]:
+                results[movie["id"]] = movie["title"]
     return results
