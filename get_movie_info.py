@@ -2,7 +2,7 @@ import requests
 from constants import (
     actors_number,
     directors_number,
-    links,
+    trailer_links,
     months,
     movies_to_display,
 )
@@ -128,9 +128,9 @@ def get_trailer(movie_id, tmdb_token):
     data = r.json()
     if data["results"]:
         if data["results"][0]["site"] == "YouTube":
-            return links["Youtube"].format(data["results"][0]["key"])
+            return trailer_links["Youtube"].format(data["results"][0]["key"])
         elif data["results"][0]["site"] == "Vimeo":
-            return links["Vimeo"].format(data["results"][0]["key"])
+            return trailer_links["Vimeo"].format(data["results"][0]["key"])
     return None
 
 

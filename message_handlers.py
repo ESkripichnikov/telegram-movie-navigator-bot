@@ -6,18 +6,18 @@ from constants import help_text
 
 async def send_help(message: types.Message):
     # the main info about the bot (what it can do) with all commands, their descriptions and starting menu
-    await message.answer(help_text, reply_markup=keyboards.start_keyboard())
+    await message.answer(help_text, reply_markup=keyboards.create_starting_keyboard())
 
 
 async def send_top(message: types.Message):
     command = message.get_command()
 
     if command == "/popular":
-        reply_markup = keyboards.trending_keyboard(start=Start.other.value)
+        reply_markup = keyboards.create_trending_keyboard(start=Start.other.value)
     elif command == "/top_rated":
-        reply_markup = keyboards.top_rated_keyboard(start=Start.other.value)
+        reply_markup = keyboards.create_top_rated_keyboard(start=Start.other.value)
     else:
-        reply_markup = keyboards.upcoming_keyboard(start=Start.other.value)
+        reply_markup = keyboards.create_upcoming_keyboard(start=Start.other.value)
 
     await message.answer("Выбери подходящий вариант", reply_markup=reply_markup)
 
@@ -25,7 +25,7 @@ async def send_top(message: types.Message):
 async def movie_query(message: types.Message):
     movie_name = message.text
     try:
-        markup = keyboards.movie_keyboard(source=Source.movie_request.value, movie_name=movie_name)
+        markup = keyboards.create_movies_keyboard(source=Source.movie_request.value, movie_name=movie_name)
         await message.answer("Выберете интересующий вас фильм", reply_markup=markup)
     except Exception:
         await message.answer("Проверьте название введённого фильма")

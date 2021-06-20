@@ -6,7 +6,7 @@ from get_movie_info import get_possible_movies, get_movies_section, \
     get_movies_genre, get_imdb_id, get_trailer
 
 
-def start_keyboard():
+def create_starting_keyboard():
     """
     Generate the keyboard with trending, top rated and upcoming movies
     """
@@ -65,7 +65,7 @@ def start_keyboard():
     return keyboard
 
 
-def trending_keyboard(start):
+def create_trending_keyboard(start):
     """
     Generate the keyboard with trending buttons
     """
@@ -90,13 +90,15 @@ def trending_keyboard(start):
     keyboard.add(btn_trending, btn_trending_genre)
 
     if start == "start_menu":
-        btn_back = InlineKeyboardButton(text="🔙 Назад",
-                                        callback_data=make_callback_data(level=current_level - 1))
+        btn_back = InlineKeyboardButton(
+            text="🔙 Назад",
+            callback_data=make_callback_data(level=current_level - 1)
+        )
         keyboard.add(btn_back)
     return keyboard
 
 
-def top_rated_keyboard(start):
+def create_top_rated_keyboard(start):
     """
     Generate the keyboard with top rated buttons
     """
@@ -120,14 +122,16 @@ def top_rated_keyboard(start):
     )
     keyboard.add(btn_top_rated, btn_top_rated_genre)
 
-    if start == "start_menu":
-        btn_back = InlineKeyboardButton(text="🔙 Назад",
-                                        callback_data=make_callback_data(level=current_level - 1))
+    if start == Start.start_menu.value:
+        btn_back = InlineKeyboardButton(
+            text="🔙 Назад",
+            callback_data=make_callback_data(level=current_level - 1)
+        )
         keyboard.add(btn_back)
     return keyboard
 
 
-def upcoming_keyboard(start):
+def create_upcoming_keyboard(start):
     """
     Generate the keyboard with upcoming movies
     """
@@ -151,14 +155,16 @@ def upcoming_keyboard(start):
     )
     keyboard.add(btn_upcoming, btn_upcoming_genre)
 
-    if start == "start_menu":
-        btn_back = InlineKeyboardButton(text="🔙 Назад",
-                                        callback_data=make_callback_data(level=current_level - 1))
+    if start == Start.start_menu.value:
+        btn_back = InlineKeyboardButton(
+            text="🔙 Назад",
+            callback_data=make_callback_data(level=current_level - 1)
+        )
         keyboard.add(btn_back)
     return keyboard
 
 
-def genre_keyboard(source, start):
+def create_genre_keyboard(source, start):
     """
     Generate the keyboard with different genres
     """
@@ -167,11 +173,16 @@ def genre_keyboard(source, start):
     r = requests.get(f'https://api.themoviedb.org/3/genre/movie/list?api_key={tmdb_token}&language=ru-RU')
     all_genres = r.json()["genres"]
     for genre in all_genres:
-        callback_data = make_callback_data(level=current_level + 1, source=source, genre_id=genre["id"], start=start)
+        callback_data = make_callback_data(
+            level=current_level + 1,
+            source=source,
+            genre_id=genre["id"],
+            start=start
+        )
         btn = InlineKeyboardButton(text=genre["name"].title(), callback_data=callback_data)
         keyboard.add(btn)
 
-    if start == "start_menu":
+    if start == Start.start_menu.value:
         btn_back = InlineKeyboardButton(
             text="🔙 Назад",
             callback_data=make_callback_data(
@@ -193,19 +204,19 @@ def genre_keyboard(source, start):
     return keyboard
 
 
-def movie_keyboard(source, **kwargs):
+def create_movies_keyboard(source, **kwargs):
     """
     Generate the keyboard with all possible movies, that could be implied
     """
     current_level = 3
-    if source == '1':
+    if source == Source.movie_request.value:
         results = get_possible_movies(kwargs.get("movie_name"), tmdb_token)
-    elif source == '2':
+    elif source == Source.trending.value:
         if kwargs.get("genre_id") == '0':
             results = get_movies_section('popular', tmdb_token)
         else:
             results = get_movies_genre(kwargs.get("genre_id"), 'popular', tmdb_token)
-    elif source == '3':
+    elif source == Source.top_rated.value:
         if kwargs.get("genre_id") == '0':
             results = get_movies_section('top_rated', tmdb_token)
         else:
@@ -246,7 +257,7 @@ def movie_keyboard(source, **kwargs):
     return keyboard
 
 
-def movie_links_keyboard(movie_id, **kwargs):
+def create_movie_links_keyboard(movie_id, **kwargs):
     """
     Generate the keyboard with links to the movie on tmdb, imdb and its trailer
     """

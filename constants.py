@@ -16,7 +16,7 @@ help_text = "КиноНавигатор\n\n " \
 months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
           "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"]
 movies_to_display = 10  # how many movies to display
-links = {
+trailer_links = {
     "Youtube": 'https://www.youtube.com/watch?v={}',
     "Vimeo": 'https://vimeo.com/{}'
 }
