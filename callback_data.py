@@ -11,7 +11,7 @@ class Source(Enum):
 
 class Start(Enum):
     start_menu = "start_menu"
-    other = "start_menu"
+    other = "other"
 
 
 menu_cd = CallbackData("show_menu", "level", "source", "movie_name", "genre_id", "movie_id", "start")

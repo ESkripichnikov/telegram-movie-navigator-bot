@@ -3,6 +3,7 @@ import keyboards
 from callback_data import menu_cd, Source
 from config import tmdb_token
 from get_movie_info import get_movie
+from enum import Enum
 
 
 async def display_start_menu(call: types.CallbackQuery, **kwargs):
@@ -64,6 +65,14 @@ async def display_movie_info(call: types.CallbackQuery, movie_id, **kwargs):
         await call.message.edit_reply_markup(markup)
     except Exception:
         await call.answer("Что-то пошло не так, попробуйте позже")
+
+
+class Level(Enum):
+    start_menu = display_start_menu
+    section_menu = list_top
+    genre_menu = list_genres
+    movies_list = list_possible_movies
+    movie_info = display_movie_info
 
 
 async def navigate(call: types.CallbackQuery, callback_data: dict):
