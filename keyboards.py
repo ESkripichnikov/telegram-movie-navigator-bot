@@ -4,6 +4,7 @@ from callback_data import make_callback_data, Source, Start
 from config import tmdb_token
 from get_movie_info import get_possible_movies, get_movies_section, \
     get_movies_genre, get_imdb_id, get_trailer
+from keyboard_builder import Keyboard
 
 
 def create_starting_keyboard():
@@ -11,157 +12,50 @@ def create_starting_keyboard():
     Generate the keyboard with trending, top rated and upcoming movies
     """
     current_level = 0
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    btn_trending = InlineKeyboardButton(
-        text="Самые популярные фильмы",
-        callback_data=make_callback_data(
-            level=current_level + 3,
-            source=Source.trending.value,
-            start=Start.start_menu.value
-        )
-    )
-    btn_trending_genre = InlineKeyboardButton(
-        text="Самые популярные фильмы по жанрам",
-        callback_data=make_callback_data(
-            level=current_level + 2,
-            source=Source.trending.value,
-            start=Start.start_menu.value
-        )
-    )
-    btn_top_rated = InlineKeyboardButton(
-        text="Самые рейтинговые фильмы",
-        callback_data=make_callback_data(
-            level=current_level + 3,
-            source=Source.top_rated.value,
-            start=Start.start_menu.value
-        )
-    )
-    btn_top_rated_genre = InlineKeyboardButton(
-        text="Самые рейтинговые фильмы по жанрам",
-        callback_data=make_callback_data(
-            level=current_level + 2,
-            source=Source.trending.value,
-            start=Start.start_menu.value
-        )
-    )
-    btn_upcoming = InlineKeyboardButton(
-        text="Премьеры",
-        callback_data=make_callback_data(
-            level=current_level + 3,
-            source=Source.upcoming.value,
-            start=Start.start_menu.value
-        )
-    )
-    btn_upcoming_genre = InlineKeyboardButton(
-        text="Премьеры по жанрам",
-        callback_data=make_callback_data(
-            level=current_level + 2,
-            source=Source.upcoming.value,
-            start=Start.start_menu.value
-        )
-    )
-    keyboard.add(btn_trending, btn_trending_genre, btn_top_rated, btn_top_rated_genre,
-                 btn_upcoming, btn_upcoming_genre)
-    return keyboard
+    keyboard = Keyboard(current_level, start=Start.start_menu.value)
+    keyboard.add_popular_buttons()
+    keyboard.add_top_rated_buttons()
+    keyboard.add_upcoming_buttons()
+    return keyboard.get_keyboard
 
 
 def create_trending_keyboard(start):
     """
     Generate the keyboard with trending buttons
     """
-    current_level = 1
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    btn_trending = InlineKeyboardButton(
-        text="Самые популярные фильмы",
-        callback_data=make_callback_data(
-            level=current_level + 2,
-            source=Source.trending.value,
-            start=start
-        )
-    )
-    btn_trending_genre = InlineKeyboardButton(
-        text="Самые популярные фильмы по жанрам",
-        callback_data=make_callback_data(
-            level=current_level + 1,
-            source=Source.trending.value,
-            start=start
-        )
-    )
-    keyboard.add(btn_trending, btn_trending_genre)
+    current_level = 0
+    keyboard = Keyboard(current_level, start)
+    keyboard.add_popular_buttons()
 
     if start == "start_menu":
-        btn_back = InlineKeyboardButton(
-            text="🔙 Назад",
-            callback_data=make_callback_data(level=current_level - 1)
-        )
-        keyboard.add(btn_back)
-    return keyboard
+        keyboard.add_back_button()
+    return keyboard.get_keyboard
 
 
 def create_top_rated_keyboard(start):
     """
     Generate the keyboard with top rated buttons
     """
-    current_level = 1
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    btn_top_rated = InlineKeyboardButton(
-        text="Самые рейтинговые фильмы",
-        callback_data=make_callback_data(
-            level=current_level + 2,
-            source=Source.top_rated.value,
-            start=start
-        )
-    )
-    btn_top_rated_genre = InlineKeyboardButton(
-        text="Самые рейтинговые фильмы по жанрам",
-        callback_data=make_callback_data(
-            level=current_level + 1,
-            source=Source.top_rated.value,
-            start=start
-        )
-    )
-    keyboard.add(btn_top_rated, btn_top_rated_genre)
+    current_level = 0
+    keyboard = Keyboard(current_level, start)
+    keyboard.add_top_rated_buttons()
 
     if start == Start.start_menu.value:
-        btn_back = InlineKeyboardButton(
-            text="🔙 Назад",
-            callback_data=make_callback_data(level=current_level - 1)
-        )
-        keyboard.add(btn_back)
-    return keyboard
+        keyboard.add_back_button()
+    return keyboard.get_keyboard
 
 
 def create_upcoming_keyboard(start):
     """
     Generate the keyboard with upcoming movies
     """
-    current_level = 1
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    btn_upcoming = InlineKeyboardButton(
-        text="Премьеры",
-        callback_data=make_callback_data(
-            level=current_level + 2,
-            source=Source.upcoming.value,
-            start=start
-        )
-    )
-    btn_upcoming_genre = InlineKeyboardButton(
-        text="Премьеры по жанрам",
-        callback_data=make_callback_data(
-            level=current_level + 1,
-            source=Source.upcoming.value,
-            start=start
-        )
-    )
-    keyboard.add(btn_upcoming, btn_upcoming_genre)
+    current_level = 0
+    keyboard = Keyboard(current_level, start)
+    keyboard.add_upcoming_buttons()
 
     if start == Start.start_menu.value:
-        btn_back = InlineKeyboardButton(
-            text="🔙 Назад",
-            callback_data=make_callback_data(level=current_level - 1)
-        )
-        keyboard.add(btn_back)
-    return keyboard
+        keyboard.add_back_button()
+    return keyboard.get_keyboard
 
 
 def create_genre_keyboard(source, start):
@@ -240,7 +134,7 @@ def create_movies_keyboard(source, **kwargs):
 
     if kwargs.get("genre_id") == '0':
         text = "🔙 Назад"
-        if kwargs.get("start") == '0':
+        if kwargs.get("start") == Start.other.value:
             callback_data = make_callback_data(level=current_level - 2,
                                                source=source,
                                                **kwargs)
