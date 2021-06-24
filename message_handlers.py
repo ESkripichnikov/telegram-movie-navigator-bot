@@ -1,6 +1,6 @@
 from aiogram import types, Dispatcher
 import keyboards
-from callback_data import Source, Start
+from callback_data import Source
 from constants import help_text
 
 
@@ -13,11 +13,11 @@ async def send_top(message: types.Message):
     command = message.get_command()
 
     if command == "/popular":
-        reply_markup = keyboards.create_trending_keyboard(start=Start.other.value)
+        reply_markup = keyboards.create_popular_keyboard()
     elif command == "/top_rated":
-        reply_markup = keyboards.create_top_rated_keyboard(start=Start.other.value)
+        reply_markup = keyboards.create_top_rated_keyboard()
     else:
-        reply_markup = keyboards.create_upcoming_keyboard(start=Start.other.value)
+        reply_markup = keyboards.create_upcoming_keyboard()
 
     await message.answer("Выбери подходящий вариант", reply_markup=reply_markup)
 
