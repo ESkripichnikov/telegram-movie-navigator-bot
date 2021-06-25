@@ -1,7 +1,7 @@
 import requests
 from constants import movies_to_display, trailer_links
 from exceptions import NoMoviesError
-from movie_description_builder import Description
+from movie_information.movie_description_builder import Description
 
 
 def pages(section, tmdb_token):
@@ -13,7 +13,7 @@ def pages(section, tmdb_token):
         yield requests.get(link.format(page=str(i))).json()["results"]
 
 
-def get_possible_movmies(movie_name, tmdb_token):
+def get_possible_movies(movie_name, tmdb_token):
     """
     Returns the list of all possible movies, that could be implied
     """

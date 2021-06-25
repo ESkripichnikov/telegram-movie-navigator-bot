@@ -1,6 +1,6 @@
 from aiogram import types, Dispatcher
-import keyboards
-from callback_data import Source
+import keyboards.keyboards as keyboards
+from callbacks.callback_data import Source
 from constants import help_text, interface_text
 from exceptions import NoMoviesError
 

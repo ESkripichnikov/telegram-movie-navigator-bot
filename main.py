@@ -1,6 +1,6 @@
 import logging
 from aiogram import Bot, Dispatcher, executor
-from callbacks import register_callbacks
+from callbacks.callbacks import register_callbacks
 from config import bot_token
 from message_handlers import register_handlers
 

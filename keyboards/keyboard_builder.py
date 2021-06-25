@@ -1,9 +1,9 @@
 from abc import ABCMeta, abstractmethod
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from callback_data import Level, make_callback_data, Source
+from callbacks.callback_data import Level, make_callback_data, Source
 from config import tmdb_token
 from constants import all_genres, keyboard_text, movie_links
-from get_movie_info import (
+from movie_information.get_movie_info import (
     get_imdb_id,
     get_movies_genre,
     get_movies_section,

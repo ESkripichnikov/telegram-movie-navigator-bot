@@ -1,10 +1,10 @@
 from aiogram import types, Dispatcher
-import keyboards
-from callback_data import Level, menu_cd, Source
+import keyboards.keyboards as keyboards
+from callbacks.callback_data import Level, menu_cd, Source
 from config import tmdb_token
 from constants import interface_text
 from exceptions import NoMoviesError
-from get_movie_info import get_movie
+from movie_information.get_movie_info import get_movie
 
 
 async def display_start_menu(call: types.CallbackQuery, **kwargs):
