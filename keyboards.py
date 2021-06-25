@@ -1,4 +1,4 @@
-from callback_data import Start, Source, Level
+from callback_data import Level, Source, Start
 from keyboard_builder import Keyboard
 
 
@@ -52,7 +52,7 @@ def create_genre_keyboard(source, start):
     else:
         place_to_return = Level.section_menu.value
 
-    keyboard.add_back_button(
+    keyboard.add_return_button(
         place_to_return=place_to_return,
         start=start,
         source=source
@@ -76,7 +76,7 @@ def create_movies_keyboard(source, **kwargs):
     else:
         place_to_return = Level.genre_menu.value
 
-    keyboard.add_back_button(
+    keyboard.add_return_button(
         place_to_return=place_to_return,
         source=source,
         **kwargs
@@ -90,5 +90,5 @@ def create_movie_links_keyboard(movie_id, **kwargs):
     """
     keyboard = Keyboard(row_width=2)
     keyboard.add_movie_links_buttons(movie_id)
-    keyboard.add_back_button(place_to_return=Level.movies_list.value, **kwargs)
+    keyboard.add_return_button(place_to_return=Level.movies_list.value, **kwargs)
     return keyboard.get_keyboard

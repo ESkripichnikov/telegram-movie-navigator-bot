@@ -1,5 +1,10 @@
 from abc import ABCMeta, abstractmethod
-from constants import months, directors_number, actors_number
+from constants import (
+    actors_number,
+    directors_number,
+    months,
+    movie_description_text
+)
 
 
 class IDescription(metaclass=ABCMeta):
@@ -68,37 +73,37 @@ class Description(IDescription):
         return self
 
     def add_vote_average(self):
-        self._description += f"⭐ {self._data['vote_average']}"
+        self._description += movie_description_text['vote_average'] + f"{self._data['vote_average']} "
         return self
 
     def add_release_date(self):
         release_date = get_release_date(self._data)
-        self._description += f"📅 {release_date} "
+        self._description += movie_description_text['release_date'] + f"{release_date} "
         return self
 
     def add_runtime(self):
         runtime = get_runtime(self._data)
-        self._description += f"🕑 {runtime}\n"
+        self._description += movie_description_text['runtime'] + f"{runtime}\n"
         return self
 
     def add_genres(self):
         genres = get_genres(self._data)
-        self._description += f"🎞️ {genres}\n"
+        self._description += movie_description_text['genres'] + f"{genres}\n"
         return self
 
     def add_production_countries(self):
         production_countries = get_countries(self._data)
-        self._description += f"🌍 {production_countries}\n\n"
+        self._description += movie_description_text['production_countries'] + f"{production_countries}\n\n"
         return self
 
     def add_directors(self):
         directors = get_directors(self._data)
-        self._description += f"🎥 Режиссер: {directors}\n"
+        self._description += movie_description_text['directors'] + f"{directors}\n"
         return self
 
     def add_actors(self):
         actors = get_actors(self._data)
-        self._description += f"🎭 В главных ролях: {actors}\n\n"
+        self._description += movie_description_text['actors'] + f"{actors}\n\n"
         return self
 
     def add_overview(self):

@@ -1,9 +1,15 @@
 from abc import ABCMeta, abstractmethod
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from callback_data import make_callback_data, Source, Level
-from constants import all_genres, movie_links
-from get_movie_info import get_possible_movies, get_movies_section, get_movies_genre, get_imdb_id, get_trailer
+from callback_data import Level, make_callback_data, Source
 from config import tmdb_token
+from constants import all_genres, keyboard_text, movie_links
+from get_movie_info import (
+    get_imdb_id,
+    get_movies_genre,
+    get_movies_section,
+    get_possible_movies,
+    get_trailer
+)
 
 
 class IKeyboard(metaclass=ABCMeta):
@@ -44,7 +50,7 @@ class IKeyboard(metaclass=ABCMeta):
 
     @staticmethod
     @abstractmethod
-    def add_back_button(start, place_to_return) -> None:
+    def add_return_button(start, place_to_return) -> None:
         pass
 
 
@@ -58,7 +64,7 @@ class Keyboard(IKeyboard):
 
     def add_popular_buttons(self, start):
         btn_popular = InlineKeyboardButton(
-            text="Самые популярные фильмы",
+            text=keyboard_text['popular'],
             callback_data=make_callback_data(
                 level=Level.movies_list.value,
                 source=Source.popular.value,
@@ -66,7 +72,7 @@ class Keyboard(IKeyboard):
             )
         )
         btn_popular_genre = InlineKeyboardButton(
-            text="Самые популярные фильмы по жанрам",
+            text=keyboard_text['popular_genre'],
             callback_data=make_callback_data(
                 level=Level.genre_menu.value,
                 source=Source.popular.value,
@@ -78,7 +84,7 @@ class Keyboard(IKeyboard):
 
     def add_top_rated_buttons(self, start):
         btn_top_rated = InlineKeyboardButton(
-            text="Самые рейтинговые фильмы",
+            text=keyboard_text['top_rated'],
             callback_data=make_callback_data(
                 level=Level.movies_list.value,
                 source=Source.top_rated.value,
@@ -86,7 +92,7 @@ class Keyboard(IKeyboard):
             )
         )
         btn_top_rated_genre = InlineKeyboardButton(
-            text="Самые рейтинговые фильмы по жанрам",
+            text=keyboard_text['top_rated_genre'],
             callback_data=make_callback_data(
                 level=Level.genre_menu.value,
                 source=Source.popular.value,
@@ -98,7 +104,7 @@ class Keyboard(IKeyboard):
 
     def add_upcoming_buttons(self, start):
         btn_upcoming = InlineKeyboardButton(
-            text="Премьеры",
+            text=keyboard_text['upcoming'],
             callback_data=make_callback_data(
                 level=Level.movies_list.value,
                 source=Source.upcoming.value,
@@ -106,7 +112,7 @@ class Keyboard(IKeyboard):
             )
         )
         btn_upcoming_genre = InlineKeyboardButton(
-            text="Премьеры по жанрам",
+            text=keyboard_text['upcoming_genre'],
             callback_data=make_callback_data(
                 level=Level.genre_menu.value,
                 source=Source.upcoming.value,
@@ -153,24 +159,24 @@ class Keyboard(IKeyboard):
 
         trailer_link = get_trailer(movie_id, tmdb_token)
         if trailer_link:
-            btn_trailer = InlineKeyboardButton(text="Смотреть трейлер", url=trailer_link)
+            btn_trailer = InlineKeyboardButton(text=keyboard_text['trailer'], url=trailer_link)
             self._keyboard.row(btn_trailer)
         return self
 
-    def add_back_button(self, place_to_return, **kwargs):
+    def add_return_button(self, place_to_return, **kwargs):
         if place_to_return == Level.movies_list.value:
-            text = "🔙 Вернуться к выбору фильма"
+            text = keyboard_text['return_to_movie']
         elif place_to_return == Level.genre_menu.value:
-            text = "🔙 Вернуться к выбору жанра"
+            text = keyboard_text['return_to_genre']
         else:
-            text = "🔙 Назад"
+            text = keyboard_text['return']
 
         kwargs["level"] = place_to_return
-        btn_back = InlineKeyboardButton(
+        btn_return = InlineKeyboardButton(
             text=text,
             callback_data=make_callback_data(**kwargs)
         )
-        self._keyboard.add(btn_back)
+        self._keyboard.add(btn_return)
         return self
 
 

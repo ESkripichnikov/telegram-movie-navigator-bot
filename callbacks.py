@@ -1,18 +1,19 @@
 from aiogram import types, Dispatcher
 import keyboards
-from callback_data import menu_cd, Source, Level
+from callback_data import Level, menu_cd, Source
 from config import tmdb_token
-from get_movie_info import get_movie
+from constants import interface_text
 from exceptions import NoMoviesError
+from get_movie_info import get_movie
 
 
 async def display_start_menu(call: types.CallbackQuery, **kwargs):
     try:
         markup = keyboards.create_starting_keyboard()
-        await call.message.edit_text("Выберете подходящий вариант")
+        await call.message.edit_text(interface_text['option_choice'])
         await call.message.edit_reply_markup(markup)
     except NoMoviesError:
-        await call.answer("Что-то пошло не так, попробуйте позже")
+        await call.answer(interface_text['error_text'])
 
 
 async def list_top(call: types.CallbackQuery, source, **kwargs):
@@ -24,28 +25,28 @@ async def list_top(call: types.CallbackQuery, source, **kwargs):
         markup = keyboards.create_upcoming_keyboard()
 
     try:
-        await call.message.edit_text("Выберете интересующий вас фильм")
+        await call.message.edit_text(interface_text['movie_choice'])
         await call.message.edit_reply_markup(markup)
     except NoMoviesError:
-        await call.answer("Что-то пошло не так, попробуйте позже")
+        await call.answer(interface_text['error_text'])
 
 
 async def list_genres(call: types.CallbackQuery, source, start, **kwargs):
     try:
         markup = keyboards.create_genre_keyboard(source, start)
-        await call.message.edit_text("Выберете интересующий вас жанр")
+        await call.message.edit_text(interface_text['genre_choice'])
         await call.message.edit_reply_markup(markup)
     except NoMoviesError:
-        await call.answer("Что-то пошло не так, попробуйте позже")
+        await call.answer(interface_text['error_text'])
 
 
 async def list_possible_movies(call: types.CallbackQuery, source, **kwargs):
     try:
         markup = keyboards.create_movies_keyboard(source=source, **kwargs)
-        await call.message.edit_text("Выберете интересующий вас фильм")
+        await call.message.edit_text(interface_text['movie_choice'])
         await call.message.edit_reply_markup(markup)
     except NoMoviesError:
-        await call.answer("Что-то пошло не так, попробуйте позже")
+        await call.answer(interface_text['error_text'])
 
 
 async def display_movie_info(call: types.CallbackQuery, movie_id, **kwargs):
@@ -55,7 +56,7 @@ async def display_movie_info(call: types.CallbackQuery, movie_id, **kwargs):
         await call.message.edit_text(movie_info, parse_mode='Markdown')
         await call.message.edit_reply_markup(markup)
     except NoMoviesError:
-        await call.answer("Что-то пошло не так, попробуйте позже")
+        await call.answer(interface_text['error_text'])
 
 
 async def navigate(call: types.CallbackQuery, callback_data: dict):
