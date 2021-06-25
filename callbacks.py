@@ -59,13 +59,6 @@ async def display_movie_info(call: types.CallbackQuery, movie_id, **kwargs):
 
 
 async def navigate(call: types.CallbackQuery, callback_data: dict):
-    current_level = callback_data["level"]
-    source = callback_data["source"]
-    movie_name = callback_data["movie_name"]
-    genre_id = callback_data["genre_id"]
-    movie_id = callback_data["movie_id"]
-    start = callback_data["start"]
-
     levels = {
         Level.start_menu.value: display_start_menu,
         Level.section_menu.value: list_top,
@@ -74,15 +67,11 @@ async def navigate(call: types.CallbackQuery, callback_data: dict):
         Level.movie_info.value: display_movie_info
     }
 
-    current_level_function = levels[current_level]
-
+    current_level_function = levels[callback_data["level"]]
+    callback_data.pop('@')
     await current_level_function(
         call,
-        source=source,
-        movie_name=movie_name,
-        genre_id=genre_id,
-        movie_id=movie_id,
-        start=start
+        **callback_data
     )
 
 

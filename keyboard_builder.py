@@ -132,10 +132,10 @@ class Keyboard(IKeyboard):
         movies_list = get_movies_list(source, kwargs["genre_id"], kwargs["movie_name"])
         for movie_id, movie_name in movies_list.items():
             kwargs["movie_id"] = movie_id
+            kwargs["level"] = Level.movie_info.value
             btn = InlineKeyboardButton(
                 text=movie_name,
                 callback_data=make_callback_data(
-                    level=Level.movie_info.value,
                     source=source,
                     **kwargs
                 )
@@ -165,12 +165,10 @@ class Keyboard(IKeyboard):
         else:
             text = "🔙 Назад"
 
+        kwargs["level"] = place_to_return
         btn_back = InlineKeyboardButton(
             text=text,
-            callback_data=make_callback_data(
-                level=place_to_return,
-                **kwargs
-            )
+            callback_data=make_callback_data(**kwargs)
         )
         self._keyboard.add(btn_back)
         return self
