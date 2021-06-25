@@ -1,61 +1,9 @@
 import requests
 from constants import (
-    actors_number,
-    directors_number,
     trailer_links,
-    months,
     movies_to_display,
 )
-
-
-def get_genres(data):
-    genres = list()
-    for genre in data["genres"]:
-        genres.append(genre['name'])
-    return ', '.join(genres).title()
-
-
-def get_countries(data):
-    countries = list()
-    for country in data["production_countries"]:
-        countries.append(country['name'])
-    return ', '.join(countries)
-
-
-def get_actors(data):
-    actors = list()
-    for man in data["credits"]["cast"]:
-        if len(actors) < actors_number and man["known_for_department"] == "Acting":
-            actors.append(man["name"])
-    return ', '.join(actors)
-
-
-def get_directors(data):
-    directors = list()
-    for man in data["credits"]["crew"]:
-        if len(directors) < directors_number and man["job"] == "Director":
-            directors.append(man["name"])
-    return ', '.join(directors)
-
-
-def get_release_date(data):
-    tmp = data['release_date'].split('-')
-    release_date = str(int(tmp[2])) + ' ' + months[int(tmp[1]) - 1] + ' ' + tmp[0]
-    return release_date
-
-
-def get_runtime(data):
-    tmp = data['runtime']
-    if tmp // 60 < 10:
-        hours = "0" + str(tmp // 60)
-    else:
-        hours = str(tmp // 60)
-    if tmp % 60 < 10:
-        minutes = "0" + str(tmp % 60)
-    else:
-        minutes = str(tmp % 60)
-    runtime = str(tmp) + " мин. / " + hours + ':' + minutes
-    return runtime
+from movie_description_builder import Description
 
 
 def pages(section, tmdb_token):
@@ -94,24 +42,18 @@ def get_movie(movie_id, tmdb_token):
     )
     data = r.json()
 
-    title = data["title"]
-    original_title = data["original_title"]
-    release_date = get_release_date(data)
-    runtime = get_runtime(data)
-    vote_average = data["vote_average"]
-    overview = data["overview"]
-    genres = get_genres(data)
-    production_countries = get_countries(data)
-    actors = get_actors(data)
-    directors = get_directors(data)
+    movie_description = Description(data)
+    movie_description.add_title()
+    movie_description.add_vote_average()
+    movie_description.add_release_date()
+    movie_description.add_runtime()
+    movie_description.add_genres()
+    movie_description.add_production_countries()
+    movie_description.add_directors()
+    movie_description.add_actors()
+    movie_description.add_overview()
 
-    return f"*{title}*\n{original_title}\n\n" \
-           f"⭐ {vote_average} 📅 {release_date} 🕑 {runtime}\n" \
-           f"🎞️ {genres}\n" \
-           f"🌍 {production_countries}\n\n" \
-           f"🎥 Режиссер: {directors}\n" \
-           f"🎭 В главных ролях: {actors}\n\n" \
-           f"{overview}"
+    return movie_description.get_description
 
 
 def get_imdb_id(movie_id, tmdb_token):
