@@ -4,6 +4,7 @@ from constants import (
     movies_to_display,
 )
 from movie_description_builder import Description
+from exceptions import NoMoviesError
 
 
 def pages(section, tmdb_token):
@@ -25,7 +26,7 @@ def get_possible_movies(movie_name, tmdb_token):
     )
     data = r.json()
     if not data["results"]:
-        raise Exception
+        raise NoMoviesError
     results = {}
     for movie in data["results"]:
         if len(results) < movies_to_display:
@@ -83,7 +84,7 @@ def get_movies_section(section, tmdb_token):
     r = requests.get(f'https://api.themoviedb.org/3/movie/{section}/?api_key={tmdb_token}&language=ru-RU')
     data = r.json()
     if not data["results"]:
-        raise Exception
+        raise NoMoviesError
     results = {}
     for movie in data["results"]:
         if len(results) < 10:
@@ -98,7 +99,7 @@ def get_movies_genre(genre_id, section, tmdb_token):
     results = {}
     for page in pages(section, tmdb_token):
         if not page and not results:
-            raise Exception  # расписать exception
+            raise NoMoviesError
         elif len(results) >= movies_to_display or (not page and results):
             return results
 

@@ -2,10 +2,10 @@ from aiogram import types, Dispatcher
 import keyboards
 from callback_data import Source
 from constants import help_text
+from exceptions import NoMoviesError
 
 
 async def send_help(message: types.Message):
-    # the main info about the bot (what it can do) with all commands, their descriptions and starting menu
     await message.answer(help_text, reply_markup=keyboards.create_starting_keyboard())
 
 
@@ -27,7 +27,7 @@ async def movie_query(message: types.Message):
     try:
         markup = keyboards.create_movies_keyboard(source=Source.movie_request.value, movie_name=movie_name)
         await message.answer("Выберете интересующий вас фильм", reply_markup=markup)
-    except Exception:
+    except NoMoviesError:
         await message.answer("Проверьте название введённого фильма")
 
 
