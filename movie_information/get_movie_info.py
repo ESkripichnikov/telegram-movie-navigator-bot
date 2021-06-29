@@ -67,10 +67,8 @@ def get_trailer(movie_id, tmdb_token):
     r = requests.get(f'https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={tmdb_token}&language=ru-RU')
     data = r.json()
     if data["results"]:
-        if data["results"][0]["site"] == "YouTube":
-            return trailer_links["Youtube"].format(data["results"][0]["key"])
-        elif data["results"][0]["site"] == "Vimeo":
-            return trailer_links["Vimeo"].format(data["results"][0]["key"])
+        site = data["results"][0]["site"]
+        return trailer_links[site].format(data["results"][0]["key"])
     return None
 
 

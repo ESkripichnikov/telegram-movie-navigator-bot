@@ -48,7 +48,7 @@ interface_text = {
 months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
           "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"]
 trailer_links = {
-    "Youtube": 'https://www.youtube.com/watch?v={}',
+    "YouTube": 'https://www.youtube.com/watch?v={}',
     "Vimeo": 'https://vimeo.com/{}'
 }
 movie_links = {
