@@ -7,7 +7,7 @@ from constants import (
 )
 
 
-class IDescription(metaclass=ABCMeta):
+class IDescriptionBuilder(metaclass=ABCMeta):
     @staticmethod
     @abstractmethod
     def get_description(data) -> None:
@@ -59,7 +59,7 @@ class IDescription(metaclass=ABCMeta):
         pass
 
 
-class Description(IDescription):
+class DescriptionBuilder(IDescriptionBuilder):
     def __init__(self, data) -> None:
         self._description = str()
         self._data = data

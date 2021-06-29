@@ -12,7 +12,7 @@ from movie_information.get_movie_info import (
 )
 
 
-class IKeyboard(metaclass=ABCMeta):
+class IKeyboardBuilder(metaclass=ABCMeta):
     @staticmethod
     @abstractmethod
     def get_keyboard() -> None:
@@ -54,7 +54,7 @@ class IKeyboard(metaclass=ABCMeta):
         pass
 
 
-class Keyboard(IKeyboard):
+class KeyboardBuilder(IKeyboardBuilder):
     def __init__(self, row_width=1) -> None:
         self._keyboard = InlineKeyboardMarkup(row_width=row_width)
 

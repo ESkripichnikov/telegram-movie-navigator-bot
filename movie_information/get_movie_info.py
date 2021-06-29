@@ -1,7 +1,7 @@
 import requests
 from constants import movies_to_display, trailer_links
 from exceptions import NoMoviesError
-from movie_information.movie_description_builder import Description
+from movie_information.movie_description_builder import DescriptionBuilder
 
 
 def pages(section, tmdb_token):
@@ -40,7 +40,7 @@ def get_movie(movie_id, tmdb_token):
     )
     data = r.json()
 
-    movie_description = Description(data)
+    movie_description = DescriptionBuilder(data)
     movie_description.add_title()
     movie_description.add_vote_average()
     movie_description.add_release_date()
