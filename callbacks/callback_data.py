@@ -1,5 +1,6 @@
 from enum import Enum
 from aiogram.utils.callback_data import CallbackData
+from constants import empty
 
 
 class Source(Enum):
@@ -25,7 +26,8 @@ class Level(Enum):
 menu_cd = CallbackData("show_menu", "level", "source", "movie_name", "genre_id", "movie_id", "start")
 
 
-def make_callback_data(level, source='-1', movie_name='-1', genre_id='-1', movie_id='-1', start=Start.other.value):
+def make_callback_data(level, source=empty, movie_name=empty,
+                       genre_id=empty, movie_id=empty, start=Start.other.value):
     return menu_cd.new(
         level=level,
         source=source,

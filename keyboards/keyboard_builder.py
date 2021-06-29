@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from callbacks.callback_data import Level, make_callback_data, Source
 from config import tmdb_token
-from constants import all_genres, keyboard_text, movie_links
+from constants import all_genres, empty, keyboard_text, movie_links
 from movie_information.get_movie_info import (
     get_imdb_id,
     get_movies_genre,
@@ -183,15 +183,15 @@ class KeyboardBuilder(IKeyboardBuilder):
 def get_movies_list(source, genre_id, movie_name):
     if source == Source.movie_request.value:
         results = get_possible_movies(movie_name, tmdb_token)
-    elif source == Source.popular.value and genre_id != '-1':
+    elif source == Source.popular.value and genre_id != empty:
         results = get_movies_genre(genre_id, 'popular', tmdb_token)
-    elif source == Source.popular.value and genre_id == '-1':
+    elif source == Source.popular.value and genre_id == empty:
         results = get_movies_section('popular', tmdb_token)
-    elif source == Source.top_rated.value and genre_id != '-1':
+    elif source == Source.top_rated.value and genre_id != empty:
         results = get_movies_genre(genre_id, 'top_rated', tmdb_token)
-    elif source == Source.top_rated.value and genre_id == '-1':
+    elif source == Source.top_rated.value and genre_id == empty:
         results = get_movies_section('top_rated', tmdb_token)
-    elif source == Source.upcoming.value and genre_id != '-1':
+    elif source == Source.upcoming.value and genre_id != empty:
         results = get_movies_genre(genre_id, 'upcoming', tmdb_token)
     else:
         results = get_movies_section('upcoming', tmdb_token)

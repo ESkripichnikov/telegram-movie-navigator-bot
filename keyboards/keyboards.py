@@ -1,4 +1,5 @@
 from callbacks.callback_data import Level, Source, Start
+from constants import empty
 from keyboards.keyboard_builder import KeyboardBuilder
 
 
@@ -69,9 +70,9 @@ def create_movies_keyboard(source, **kwargs):
 
     if source == Source.movie_request.value:
         return keyboard.get_keyboard
-    elif kwargs["genre_id"] == '-1' and kwargs["start"] == Start.other.value:
+    elif kwargs["genre_id"] == empty and kwargs["start"] == Start.other.value:
         place_to_return = Level.section_menu.value
-    elif kwargs["genre_id"] == '-1' and kwargs["start"] == Start.start_menu.value:
+    elif kwargs["genre_id"] == empty and kwargs["start"] == Start.start_menu.value:
         place_to_return = Level.start_menu.value
     else:
         place_to_return = Level.genre_menu.value

@@ -4,6 +4,7 @@ from config import tmdb_token
 movies_to_display = 10  # how many movies to display
 actors_number = 5  # how many actors to display
 directors_number = 2  # how many directors to display
+empty = '-'  # default value for CallBackData fields
 help_text = "КиноНавигатор\n\n " \
             "Я могу быстро найти много полезной информации о любом фильме, " \
             "а также помочь с поиском самых популярных фильмов любого жанра.\n\n" \
