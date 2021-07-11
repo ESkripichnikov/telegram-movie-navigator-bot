@@ -19,7 +19,16 @@
 КиноНавигатор использует [The Movie Database API](https://developers.themoviedb.org/3/getting-started/introduction)
 
 Данный бот разбит на следующие модули:
-- main.py - содержит основные обработчики пользовательских запросов
-- get_movie_info.py - в данном файле описано взаимодействие с The Movie Database API (создание запросов и их обработка)
-- callback_data.py - описание callbackdata, необходимой для навигации по меню бота
-- keyboards.py - содержит все необходимые inline клавиатуры
+- main.py - инициализация бота и его запуск
+- message_handlers.py - содержит основные обработчики пользовательских запросов
+- movie_information
+  - get_movie_info.py - в данном файле описано взаимодействие с The Movie Database API (создание запросов и их обработка)
+  - movie_description_builder.py - содержит класс, формирующий текст описания фильма
+- keyboards
+  - keyboards.py - содержит все необходимые клавиатуры
+  - keyboard_builder.py - описывает класс, конструирующий клавиатуры
+- callbacks
+  - callbacks.py - описание всей навигации по меню бота
+  - callback_data.py - содержит callbackdata, необходимую для навигации по меню бота
+- constants.py - содержит все основные константы, используемые ботом. В том числе, весь необходимый текст.
+- exceptions.py - описание необходимых пользовательских исключений
